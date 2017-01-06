@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neighborhood Map</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/jasny-bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- Knockout core Javascript -->
+    <script type="text/javascript" src="js/knockout-3.4.1.js"></script>
+  </head>
+  <body>
+    <div class="navmenu navmenu-default navmenu-fixed-left offcanvas">
+      <a class="navmenu-brand" href="https://github.com/yantiz">Ramen Shops in LA</a>
+      <ul class="nav navmenu-nav">
+        <li class="active">
+          <a href="#">
+            <input class="filter" type="text" data-bind="textInput: keyword, event: {keyup: filterShops}" placeholder="type your keyword to filter the results">
+          </a>
+        </li>
+      </ul>
+      <ul class="nav navmenu-nav" data-bind="foreach: shops">
+        <li data-bind="if: $data.getVisible">
+          <a href="#" data-bind="click: $root.triggerMarker">
+            <span data-bind="text: $data.name"></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="canvas">
+      <div class="navbar navbar-default navbar-fixed-top">
+        <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-recalc="false" data-target=".navmenu" data-canvas=".canvas">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+
+      <div class="container">
+        <div id="map"></div>
+
+        <!-- Loading the Google Maps Javascript API -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGNBAFq12RxBSVAkLH5zdWIbS3LBHaftU&libraries=places&callback=initMap" async defer></script>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jasny-bootstrap.min.js"></script>
+
+    <!-- The app's Javascript code -->
+    <script src="js/app.js"></script>
+  </body>
+</html>
