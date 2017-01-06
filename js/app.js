@@ -12,15 +12,15 @@ var RamenShop = function(place) {
   // Attributes about the shop's marker:
   this.marker = ko.observable();
   this.getVisible = ko.observable();
-  this.addMarker = function(marker) {
-    this.marker(marker);
-    this.getVisible(marker.getVisible());
-  }.bind(this);
-
+ 
   // Attributes from Foursquare:
   this.phone = ko.observable();
   this.menuUrl = ko.observable();
-}
+};
+RamenShop.prototype.addMarker = function(marker) {
+  this.marker(marker);
+  this.getVisible(marker.getVisible());
+};
 
 
 // ======< ViewModel >======
@@ -28,7 +28,7 @@ function ViewModel() {
   var self = this;
 
   self.keyword = ko.observable('');
-  self.shops = ko.observableArray(); 
+  self.shops = ko.observableArray();
 
   self.addShop = function(name) {
     self.shops().push(name);
@@ -41,13 +41,17 @@ function ViewModel() {
 
   self.filterShops = function() {
     var keyword = self.keyword().toLowerCase();
+
     self.shops().forEach(function(shop) {
       if (keyword) {
+        // Close potential orphan infowindow
+        infowindow.close();
+
         self.setMarkerVisibility(shop, false);
         if (shop.name().toLowerCase().indexOf(keyword) !== -1) {
           self.setMarkerVisibility(shop, true);
         }
-      } 
+      }
       else {
         self.setMarkerVisibility(shop, true);
       }
@@ -55,19 +59,22 @@ function ViewModel() {
   };
 
   self.triggerMarker = function(shop) {
-    new google.maps.event.trigger(shop.marker(), 'click');
+    google.maps.event.trigger(shop.marker(), 'click');
   };
 }
 vm = new ViewModel();
 
 
 // ======< The app's code >======
+
+// Constant settings
 var map = null;
 var service;
 var infowindow;
 
 // API keys for Foursquare
-var CLIENT_ID = 'LEJTDC2PT4YVM1JZ5IOFWK35PB54ZBTH4BNCREQQWYIFGKGY', CLIENT_SECRET = 'ZEWB0YZB4ZBQEAZ23ZGEXORK0KYI34YYDL34QGD3X0RPRLLO';
+var CLIENT_ID = 'LEJTDC2PT4YVM1JZ5IOFWK35PB54ZBTH4BNCREQQWYIFGKGY';
+var CLIENT_SECRET = 'ZEWB0YZB4ZBQEAZ23ZGEXORK0KYI34YYDL34QGD3X0RPRLLO';
 
 // Error handling after 5 seconds in case of failing to initialize the map
 setTimeout(function() {
@@ -83,7 +90,7 @@ function initMap() {
     center: LA_downtown,
     zoom: 10
   });
-  
+
   var request = {
     location: LA_downtown,
     radius: '50000',
@@ -127,13 +134,13 @@ function callback(results, status) {
           if (result.contact.formattedPhone) {
             shop.phone(result.contact.formattedPhone);
             foursquare_response += '<p>Phone: ' + result.contact.formattedPhone + '</p>';
-          }            
+          }
           else {
             foursquare_response += '<p style="color: red">Unable to get the phone number of this shop.</p>';
           }
           if (result.menu) {
             shop.menuUrl(result.menu.url);
-            foursquare_response += '<p><a href="' + result.menu.url + '">Menu</a></p>';
+            foursquare_response += '<p><a target="blank" href="' + result.menu.url + '">Menu</a></p>';
           }
           else {
             foursquare_response += '<p style="color: red">Unable to get the menu of this shop.</p>';
@@ -143,24 +150,24 @@ function callback(results, status) {
           // Error handling in case of failing to connect to Foursquare's API
           foursquare_response += "<h5 style='color: red'>Failed to retrieve information from Foursquare.</h5>";
         }
-      })
+      });
 
       shop.marker().addListener('click', function() {
         infowindow.close();
         infowindow.setContent(
-            '<h4>' + shop.name() + '</h4>' + 
-            '<img src="' + shop.image_url() + '">' + '<br><br>' + 
+            '<h4>' + shop.name() + '</h4>' +
+            '<img src="' + shop.image_url() + '">' + '<br><br>' +
             '<p>' + shop.formatted_address() + '</p>' +
             '<p>' + 'Rating: ' + shop.rating() + '</p>' +
             foursquare_response
         );
         infowindow.open(map, this);
 
-        // If being clicked, let the marker bounce and have it rested again after 1.45 seconds 
+        // If being clicked, let the marker bounce and have it rested again after 1.4 seconds
         this.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function () {
           this.setAnimation(null);
-        }.bind(this), 1450);
+        }.bind(this), 1400);
       });
     });
   }
@@ -170,4 +177,4 @@ function callback(results, status) {
   }
   // Make sure the ViewModel initializes itself after loading Google Maps and retrieving information from Foursquare
   ko.applyBindings(vm);
-} 
+}
