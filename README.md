@@ -1,6 +1,6 @@
 # Neighborhood Map
 
-This project builds an interactive map based on third-party APIs including Google Maps and Foursquare. Users can use this map to find ramen shops around the city
+This project builds an interactive map based on third-party APIs including Google Maps and Foursquare. Users can use this app to find ramen shops within the city
 of Los Angeles.
 
 ## Technologies that are used
