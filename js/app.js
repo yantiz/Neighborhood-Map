@@ -40,13 +40,14 @@ function ViewModel() {
   };
 
   self.filterShops = function() {
+    // Close potential orphan infowindow
+    infowindow.close();
+
     var keyword = self.keyword().toLowerCase();
 
     self.shops().forEach(function(shop) {
       if (keyword) {
-        // Close potential orphan infowindow
-        infowindow.close();
-
+        
         self.setMarkerVisibility(shop, false);
         if (shop.name().toLowerCase().indexOf(keyword) !== -1) {
           self.setMarkerVisibility(shop, true);
