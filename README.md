@@ -1,6 +1,6 @@
 # Neighborhood Map
 
-- This project basically follows the design pattern of MVC.
+- This project follows the design pattern of MVC in general.
 - This project builds an interactive map based on third-party APIs including Google Maps and Foursquare.
 - Users can use this map to locate ramen shops within the city of Los Angeles and find relevant information about these shops.
 
