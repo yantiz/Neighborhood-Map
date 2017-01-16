@@ -25,6 +25,8 @@ RamenShop.prototype.addMarker = function(marker) {
 
 // ======< ViewModel >======
 function ViewModel() {
+  // The variable 'self' always refers to the ViewModel itself.
+  // This allows us to get access to the ViewModel no matter what context we are in.
   var self = this;
 
   self.keyword = ko.observable('');
